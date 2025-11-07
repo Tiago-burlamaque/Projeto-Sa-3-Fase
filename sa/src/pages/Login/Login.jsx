@@ -3,8 +3,8 @@ import LoginForm from '../../components/LoginForm/LoginForm'
 
 function Login() {
   return (
-    <div className='flex bg-white'>
-      <div className='bg-blue-500 min-h-screen w-200'>
+    <div className='flex '>
+      <div className='bg-blue-500 w-600 hidden md:block'>
       
       </div>
       <div>
