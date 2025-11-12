@@ -15,9 +15,9 @@ function LoginForm() {
 
   return (
 
-    <section className='bg-red-500 h-screen w-2xl'>
-      <form className='bg-cyan-500 h-screen flex flex-col justify-center items-center gap'>
-        <div className='bg-green-500 w-md'>
+    <section className='bg-red-500 h-screen md:w-2xl'>
+      <form className='bg-cyan-500 h-screen flex flex-col justify-center items-center '>
+        <div className='bg-green-500 md:w-md'>
           <div className='bg-pink-500'>
 
             <div className='flex flex-col justify-center items-center'>

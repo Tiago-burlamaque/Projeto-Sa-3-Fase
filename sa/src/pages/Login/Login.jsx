@@ -3,9 +3,9 @@ import LoginForm from '../../components/LoginForm/LoginForm'
 
 function Login() {
   return (
-    <div className='flex '>
+    <div className='md:flex '>
       <div className='bg-amber-500 h-screen w-screen'>
-ola
+
       </div>
       <div>
 
