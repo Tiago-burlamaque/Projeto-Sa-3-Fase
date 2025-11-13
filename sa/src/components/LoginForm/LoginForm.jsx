@@ -11,7 +11,7 @@ function LoginForm() {
   const handleLogin = () => {
     e.preventDefault()
 
-    navigate('home')
+    navigate('inventario')
   }
 
   return (
