@@ -11,34 +11,41 @@ function LoginForm() {
   const handleLogin = () => {
     e.preventDefault()
 
+    navigate('home')
   }
 
   return (
 
-    <section className='bg-red-500 h-screen md:w-2xl'>
-      <form className='bg-cyan-500 h-screen flex flex-col justify-center items-center '>
-        <div className='bg-green-500 md:w-md'>
-          <div className='bg-pink-500'>
+    <section className='h-screen md:w-2xl'>
+      <form className='bg-white h-screen flex flex-col justify-center items-center '>
+        <div className=' md:w-md'>
+          <h1 className=' text-center mb-10 font-sans text-3xl'>Bem-vindo(a)</h1>
+          <div className=''>
 
-            <div className='flex flex-col justify-center items-center'>
+            <div className='flex flex-col justify-center items-center mb-2'>
               {/* <label htmlFor="email" id='email'>Email</label> */}
               <input type="email"
                 id='email'
-                className='border border-gray-400 rounded p-1 w-xs' />
+                className='border border-gray-400 rounded p-2 w-xs md:w-md focus:outline-blue-500'
+                placeholder='Email' />
             </div>
 
-            <div className='flex flex-col justify-center items-center'>
+            <div className='flex flex-col justify-center items-center mb-2'>
               {/* <label htmlFor="senha" id='senha'>Senha</label> */}
               <input type="senha"
                 id='senha'
-                className='border border-gray-400 rounded p-1 w-xs' />
+                className='border border-gray-400 rounded p-2 w-xs md:w-md focus:outline-blue-500'
+                placeholder='Senha' />
             </div>
           </div>
 
-          <div className='justify-center items-center text-center border mt-4'>
-            <button>Logar</button>
+          <div className='justify-center items-center text-center mt-4'>
+            <button className='bg-blue-500 text-white md:w-md w-xs rounded p-2 cursor-pointer transition hover:bg-blue-600'>Logar</button>
           </div>
-
+          <div className="flex text-center justify-center">
+            <p className='text-base mt-2 mr-2'>Não tem uma conta?</p>
+            <p className='relative text-blue-500 hover:text-blue-800 after:absolute after:left-0 after:bottom-0 after:w-full after:h-[2px] after:bg-blue-600 after:scale-x-0 hover:after:scale-x-100 after:origin-left after:transition-transform after:duration-300 text-base mt-2'><Link to='cadastro' onSubmit={handleLogin}>Cadastre-se</Link></p>
+          </div>
         </div>
 
       </form>
