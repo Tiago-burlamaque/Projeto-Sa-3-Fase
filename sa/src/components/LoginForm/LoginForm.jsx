@@ -1,23 +1,56 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from "react-router";
 import { toast } from 'react-toastify';
+import axios from 'axios'
 
 function LoginForm() {
-  const [email, setEmail] = useState('')
-  const [senha, setSenha] = useState('')
+  const [usuarios, setUsuarios] = useState([])
+  const [email, setEmail] = useState("")
+  const [senha, setSenha] = useState("")
+  const [formData, setFormData] = useState({
+    email: "",
+    senha: ""
+  })
+
+  const fetchUsuarios = async () => {
+    try {
+      const response = await axios.get("http://localhost:3000/usuarios")
+        .then(data => console.log(data))
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  useEffect(() => {
+    fetchUsuarios()
+    // setUsuarios(response.data)
+    //   .catch((error) => {
+    //     console.error("Erro ao buscar usuários:", error)
+    //   })
+  }, [])
+
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }))
+  }
 
   const navigate = useNavigate()
 
-  const handleLogin = () => {
+  const handleLogin = (e) => {
     e.preventDefault()
 
-    navigate('inventario')
+    try {
+      
+    } catch (error) {
+      
+    }
   }
 
   return (
 
     <section className='h-screen md:w-2xl'>
-      <form className='bg-white h-screen flex flex-col justify-center items-center '>
+      <form onSubmit={handleLogin} className='bg-white h-screen flex flex-col justify-center items-center '>
         <div className=' md:w-md'>
           <h1 className=' text-center mb-10 font-sans text-3xl'>Bem-vindo(a)</h1>
           <div className=''>
@@ -27,24 +60,32 @@ function LoginForm() {
               <input type="email"
                 id='email'
                 className='border border-gray-400 rounded p-2 w-xs md:w-md focus:outline-blue-500'
-                placeholder='Email' />
+                placeholder='Email'
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
             </div>
 
             <div className='flex flex-col justify-center items-center mb-2'>
               {/* <label htmlFor="senha" id='senha'>Senha</label> */}
-              <input type="senha"
+              <input type="password"
                 id='senha'
                 className='border border-gray-400 rounded p-2 w-xs md:w-md focus:outline-blue-500'
-                placeholder='Senha' />
+                placeholder='Senha'
+                value={senha}
+                onChange={(e) => setSenha(e.target.value)}
+                required
+              />
             </div>
           </div>
 
           <div className='justify-center items-center text-center mt-4'>
-            <button className='bg-blue-500 text-white md:w-md w-xs rounded p-2 cursor-pointer transition hover:bg-blue-600'>Logar</button>
+            <button className='bg-blue-500 text-white md:w-md w-xs rounded p-2 cursor-pointer transition hover:bg-blue-600' onSubmit={handleLogin}>Logar</button>
           </div>
           <div className="flex text-center justify-center">
             <p className='text-base mt-2 mr-2'>Não tem uma conta?</p>
-            <p className='relative text-blue-500 hover:text-blue-800 after:absolute after:left-0 after:bottom-0 after:w-full after:h-[2px] after:bg-blue-600 after:scale-x-0 hover:after:scale-x-100 after:origin-left after:transition-transform after:duration-300 text-base mt-2'><Link to='cadastro' onSubmit={handleLogin}>Cadastre-se</Link></p>
+            <p className='relative text-blue-500 hover:text-blue-800 after:absolute after:left-0 after:bottom-0 after:w-full after:h-[2px] after:bg-blue-600 after:scale-x-0 hover:after:scale-x-100 after:origin-left after:transition-transform after:duration-300 text-base mt-2'><Link to='cadastro'>Cadastre-se</Link></p>
           </div>
         </div>
 
