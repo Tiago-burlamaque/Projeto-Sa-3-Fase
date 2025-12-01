@@ -80,8 +80,8 @@ function LoginForm() {
           </div>
 
           <div className='justify-center items-center text-center mt-4'>
-            <button type="submit" className={`bg-blue-500 text-white md:w-md w-xs rounded p-2 cursor-pointer transition hover:bg-blue-600 ${loading ? 'opacity-60 cursor-not-allowed' : ''}`}>
-              {loading ? 'Carregando...' : 'Logar'}
+            <button type="submit" className={`bg-blue-500 text-white md:w-md w-xs rounded p-2 cursor-pointer transition hover:bg-blue-600 ${loading ? '' : ''}`}>
+              {loading ? 'Logar' : 'Logar'}
             </button>
           </div>
           <div className="flex text-center justify-center">

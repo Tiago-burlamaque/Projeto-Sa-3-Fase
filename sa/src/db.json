@@ -2,7 +2,7 @@
   "usuarios": [
     {
       "id": 1,
-      "nome": "tiago",
+      "nome": "Tiago",
       "email": "tiago@gmail.com",
       "senha": "tiago123",
       "data_nascimento": "2008-06-10",

@@ -33,3 +33,6 @@ export const AuthProvider = ({ children }) => {
 
 // hook customizado para consumir o contexto
 export const useAuth = () => useContext(AuthContext);
+
+// reasonable default export so different import styles won't break the app
+export default AuthProvider;

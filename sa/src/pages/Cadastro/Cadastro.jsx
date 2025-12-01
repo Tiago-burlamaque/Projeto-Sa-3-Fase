@@ -30,6 +30,13 @@ const Cadastro = () => {
     setIsSaving(true);
 
     try {
+      // Prevent registering the same email several times
+      const existing = await axios.get('http://localhost:3001/usuarios', { params: { email } });
+      if (existing.data.length > 0) {
+        toast.error('Email já cadastrado. Use outro email ou faça login.', { autoClose: 2000, hideProgressBar: true });
+        setIsSaving(false);
+        return;
+      }
       await axios.post('http://localhost:3001/usuarios', { email, senha });
 
       setIsSaving(false);
@@ -51,7 +58,9 @@ const Cadastro = () => {
   };
 
   return (
-    <div className="w-full max-w-md p-6 bg-white rounded-xl shadow-lg">
+    <section className=" h-screen p-6 bg-white rounded-xl shadow-lg flex flex-col justify-center items-center">
+      <div className='bg-blue-500 w-100 p-10 rounded-2xl shadow-lg text-white'>
+
       <h2 className="text-2xl font-bold mb-6 text-center">Criar Usuário</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
@@ -99,15 +108,16 @@ const Cadastro = () => {
             type="submit"
             disabled={isSaving}
             className={`w-full p-2 rounded-lg text-white ${
-              isSaving ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'
-            } transition-colors`}
-          >
+              isSaving ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700 cursor-pointer'
+              } transition-colors`}
+              >
             {isSaving ? 'Salvando...' : 'Criar Usuário'}
           </button>
         </div>
       </form>
       <ToastContainer />
-    </div>
+            </div>
+    </section>
   );
 };
 

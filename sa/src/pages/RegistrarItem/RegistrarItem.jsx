@@ -1,70 +1,88 @@
 
 
+import React from 'react'
+
+function FormCard({ title, children, onSubmit, className = '' }) {
+  return (
+    <div className={`bg-blue-500 my-4 mx-2 rounded-lg p-4 flex flex-col justify-center items-center shadow ${className}`}>
+      <h2 className="text-white text-lg font-semibold mb-2">{title}</h2>
+      <form onSubmit={onSubmit} className="w-full max-w-4xl">
+        {children}
+      </form>
+    </div>
+  )
+}
+
 function RegistrarItem() {
   return (
-    <section className="flex-col bg-green-500 h-screen">
-      <div className="h-screen bg-white flex flex-col">
-        <div className="h-1/2 bg-blue-500 my-4 mx-4 rounded-lg justify-center items-center flex flex-col">
-          <form className="grid grid-cols-3 gap-4 p-4">
-            <div className="flex flex-col">
-              <label htmlFor="nomeDoItem">Nome do item</label>
-            <input type="text" placeholder="Nome do item" className="bg-white w-60 rounded p-2" />
-            </div>
-            <div className="flex flex-col">
-              <label htmlFor="patrimonio">Patrimônio</label>
-            <input type="text" placeholder="Patrimônio" className="bg-white w-60 rounded p-2" />
+    <section className="min-h-screen">
+      <div className="max-w-6xl mx-auto p-4 bg-white rounded-lg shadow">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Inventário */}
+          <FormCard title="Registrar Inventário" className="mb-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-black">
+              <div className="flex flex-col">
+                <label htmlFor="nomeDoItem">Nome do item</label>
+                <input id="nomeDoItem" name="nomeDoItem" type="text" placeholder="Nome do item" className="bg-white w-full rounded p-2" />
               </div>
               <div className="flex flex-col">
-                <label htmlFor="quantidade">Quantidade</label>
-            <input type="text" placeholder="Quantidade" className="bg-white w-60 rounded p-2" />
+                <label htmlFor="patrimonio">Patrimônio</label>
+                <input id="patrimonio" name="patrimonio" type="text" placeholder="Patrimônio" className="bg-white w-full rounded p-2" />
+              </div>
+              <div className="flex flex-col">
+                <label htmlFor="quantidadeInventario">Quantidade</label>
+                <input id="quantidadeInventario" name="quantidadeInventario" type="number" placeholder="Quantidade" className="bg-white w-full rounded p-2" />
               </div>
               <div className="flex flex-col">
                 <label htmlFor="precoUnitario">Preço unitário</label>
-            <input type="text" placeholder="Preço unitário" className="bg-white w-60 rounded p-2" />
+                <input id="precoUnitario" name="precoUnitario" type="text" placeholder="Preço unitário" className="bg-white w-full rounded p-2" />
               </div>
               <div className="flex flex-col">
-                <label htmlFor="PreçoTotal">Preço total</label>
-            <input type="text" placeholder="Preço Total" className="bg-white w-60 rounded p-2" />
+                <label htmlFor="precoTotal">Preço total</label>
+                <input id="precoTotal" name="precoTotal" type="text" placeholder="Preço Total" className="bg-white w-full rounded p-2" />
               </div>
-            <button type="submit" className="bg-blue-400 text-white rounded cursor-pointer hover:bg-blue-600 transition hover:shadow-2xl w-full p-2">Registrar inventário</button>
-          </form>
-        </div>
-        <div className="h-1/2 bg-blue-500 my-4 mx-4 rounded-lg justify-center items-center flex flex-col">
-          <div className="flex-col">
-            <form className=" flex-col grid grid-cols-3 gap-4 p-4 text-white ">
-              <div className="flex flex-col ">
+              <div className="col-span-full flex justify-end">
+                <button type="submit" className="bg-blue-400 text-white rounded cursor-pointer hover:bg-blue-600 transition hover:shadow-2xl w-full sm:w-auto sm:px-6 py-2">Registrar inventário</button>
+              </div>
+            </div>
+          </FormCard>
+
+          {/* Movimentação */}
+          <FormCard title="Registrar Movimentação">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-black">
+              <div className="flex flex-col">
                 <label htmlFor="data">Data</label>
-                <input type="date" name="data" id="data" className="bg-white w-60 rounded p-2 text-black " />
+                <input id="data" name="data" type="date" className="bg-white w-full rounded p-2 text-black" />
               </div>
               <div className="flex flex-col">
                 <label htmlFor="tipoDaMovimentacao">Tipo da movimentação</label>
-                <select name="" id="tipoDaMovimentacao" className="bg-white w-60 rounded p-2 text-black">
-                  <option value="selecione">Selecione</option>
+                <select id="tipoDaMovimentacao" name="tipoDaMovimentacao" className="bg-white w-full rounded p-2 text-black">
+                  <option value="">Selecione</option>
                   <option value="entrada">Entrada</option>
                   <option value="saida">Saída</option>
                 </select>
               </div>
               <div className="flex flex-col">
-                <label htmlFor="NomeDoCliente">Nome do cliente</label>
-                <input type="text" name="NomeDoCliente" id="NomeDoCliente" className="bg-white w-60 rounded p-2 text-black" />
+                <label htmlFor="nomeDoCliente">Nome do cliente</label>
+                <input id="nomeDoCliente" name="nomeDoCliente" type="text" className="bg-white w-full rounded p-2 text-black" />
               </div>
               <div className="flex flex-col">
-                <label htmlFor="NomeDoItem">Nome do item</label>
-                <input type="text" name="NomeDoItem" id="NomeDoItem" className="bg-white w-60 rounded p-2 text-black" />
+                <label htmlFor="nomeDoItemMov">Nome do item</label>
+                <input id="nomeDoItemMov" name="nomeDoItemMov" type="text" className="bg-white w-full rounded p-2 text-black" />
               </div>
               <div className="flex flex-col">
-                <label htmlFor="quantidade">Quantidade</label>
-                <input type="number" name="valorUnitario" id="valorUnitario" className="bg-white w-60 rounded p-2 text-black" />
+                <label htmlFor="quantidadeMov">Quantidade</label>
+                <input id="quantidadeMov" name="quantidadeMov" type="number" className="bg-white w-full rounded p-2 text-black" />
               </div>
               <div className="flex flex-col">
                 <label htmlFor="custoTotal">Custo total</label>
-                <input type="number" name="custoTotal" id="custoTotal" className="bg-white w-60 rounded p-2 text-black" />
+                <input id="custoTotal" name="custoTotal" type="number" className="bg-white w-full rounded p-2 text-black" />
               </div>
-
-              <button type="submit" className="bg-blue-400 text-white rounded cursor-pointer hover:bg-blue-600 transition hover:shadow-2xl p-2">Registrar movimentação</button>
-
-            </form>
-          </div>
+              <div className="col-span-full flex justify-end">
+                <button type="submit" className="bg-blue-400 text-white rounded cursor-pointer hover:bg-blue-600 transition hover:shadow-2xl w-full sm:w-auto sm:px-6 py-2">Registrar movimentação</button>
+              </div>
+            </div>
+          </FormCard>
         </div>
       </div>
     </section>
