@@ -1,51 +1,50 @@
 import React, { useEffect, useState } from 'react'
-import { Link, useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
 import axios from 'axios'
+import { useAuth } from '../../Context/AuthContext';
 
 function LoginForm() {
   const [usuarios, setUsuarios] = useState([])
   const [email, setEmail] = useState("")
   const [senha, setSenha] = useState("")
-  const [formData, setFormData] = useState({
-    email: "",
-    senha: ""
-  })
-
-  const fetchUsuarios = async () => {
-    try {
-      const response = await axios.get("http://localhost:3000/usuarios")
-        .then(data => console.log(data))
-    } catch (error) {
-      console.error(error)
-    }
-  }
-
-  useEffect(() => {
-    fetchUsuarios()
-    // setUsuarios(response.data)
-    //   .catch((error) => {
-    //     console.error("Erro ao buscar usuários:", error)
-    //   })
-  }, [])
-
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }))
-  }
-
+  const [loading, setLoading] = useState(true)
   const navigate = useNavigate()
 
-  const handleLogin = (e) => {
-    e.preventDefault()
+  const {login, user} = useAuth()
+
+  useEffect(() => {
+    if (user) {
+      navigate('/inventario');
+    }
+  }, [user, navigate]);
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
 
     try {
-      
+      const response = await axios.get('http://localhost:3001/usuarios', {
+        params: { email, senha },
+      });
+
+      console.log("resposta", response)
+      if (response.data.length === 0) {
+        toast.error('Usuário não encontrado. Verifique o e-mail e senha.', {
+          autoClose: 2000,
+          hideProgressBar: true,
+        });
+        return;
+      }
+
+      login(email); // <-- atualiza contexto
+      toast.success('Login realizado com sucesso!', { autoClose: 2000 });
+
+      setTimeout(() => navigate('/inventario'), 2000);
     } catch (error) {
-      
+      console.error('Erro ao verificar o usuário:', error);
+      toast.error('Erro ao conectar com o servidor.', { autoClose: 2000 });
     }
-  }
+  };
 
   return (
 
@@ -81,7 +80,9 @@ function LoginForm() {
           </div>
 
           <div className='justify-center items-center text-center mt-4'>
-            <button className='bg-blue-500 text-white md:w-md w-xs rounded p-2 cursor-pointer transition hover:bg-blue-600' onSubmit={handleLogin}>Logar</button>
+            <button type="submit" className={`bg-blue-500 text-white md:w-md w-xs rounded p-2 cursor-pointer transition hover:bg-blue-600 ${loading ? 'opacity-60 cursor-not-allowed' : ''}`}>
+              {loading ? 'Carregando...' : 'Logar'}
+            </button>
           </div>
           <div className="flex text-center justify-center">
             <p className='text-base mt-2 mr-2'>Não tem uma conta?</p>

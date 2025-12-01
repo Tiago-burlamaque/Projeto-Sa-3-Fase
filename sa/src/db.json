@@ -1,0 +1,28 @@
+{
+  "usuarios": [
+    {
+      "id": 1,
+      "nome": "tiago",
+      "email": "tiago@gmail.com",
+      "senha": "tiago123",
+      "data_nascimento": "2008-06-10",
+      "cpf": "12345678901",
+      "rg": "123456789",
+      "telefone": "11999999999",
+      "endereco": {
+        "cep": "01234567",
+        "logradouro": "Rua A",
+        "numero": "100",
+        "complemento": "Apto 101",
+        "bairro": "Bairro B",
+        "cidade": "Cidade C",
+        "estado": "Estado D"
+      }
+    },
+    {
+      "id": "d11e",
+      "email": "teste@gmail.com",
+      "senha": "teste123"
+    }
+  ]
+}

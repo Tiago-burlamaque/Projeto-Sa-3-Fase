@@ -1,13 +1,14 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import {
   MdDashboard,
   MdExitToApp,
   MdMenu,
   MdClose,
 } from "react-icons/md";
+import { NavLink } from "react-router-dom";
 import { FaUserPlus, FaListAlt, FaCalendarCheck } from "react-icons/fa";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../Context/AuthContext";
 
 const SideMenu = () => {
   const navigate = useNavigate();
@@ -19,24 +20,25 @@ const SideMenu = () => {
     navigate("/");
   };
 
-  const toggleMenu = () => {
-    setIsCollapsed(!isCollapsed);
-  };
-
   return (
     <aside
       className={`h-screen bg-blue-500 text-white flex flex-col justify-between transition-all duration-300 ${
         isCollapsed ? "w-20" : "w-64"
       }`}
     >
-      {/* TOPO - Botão de Toggle */}
-      <div className="p-4 flex items-center justify-between border-b border-cyan-700">
+      {/* TOPO */}
+      <div className="p-4 flex items-center justify-between border-b border-blue-700">
         {!isCollapsed && (
-          <h1 className="text-lg font-bold tracking-wide"><img src="public/toolbox-svgrepo-com.svg" alt="" /></h1>
+          <img
+            src="/toolbox-svgrepo-com.svg"
+            alt="Logo"
+            className="w-8 h-8"
+          />
         )}
+
         <button
-          onClick={toggleMenu}
-          className="text-white hover:text-cyan-300 focus:outline-none transition cursor-pointer"
+          onClick={() => setIsCollapsed(!isCollapsed)}
+          className="text-white hover:text-gray-200 cursor-pointer"
         >
           {isCollapsed ? <MdMenu size={24} /> : <MdClose size={24} />}
         </button>
@@ -45,63 +47,75 @@ const SideMenu = () => {
       {/* MENU */}
       <nav className="flex-1 p-4 space-y-4 overflow-y-auto">
         <ul className="space-y-3">
+
+          {/* === INÍCIO === */}
           <li>
-            <Link
+            <NavLink
               to="/inventario"
-              className="flex items-center gap-3  transition relative text-white hover:text-gray-200 after:absolute after:left-0 after:bottom-0 after:w-full after:h-[2px] after:bg-blue-600 after:scale-x-0 hover:after:scale-x-100 after:origin-left after:transition-transform after:duration-300 text-base "
+              className={({ isActive }) =>
+                `flex items-center gap-3 text-base transition relative
+                ${isActive ? "text-white font-semibold" : "text-gray-200 hover:text-white"}
+              `
+              }
             >
               <MdDashboard size={20} />
               {!isCollapsed && <span>Início</span>}
-            </Link>
+            </NavLink>
           </li>
 
+          {/* === MOVIMENTAÇÃO === */}
           <li>
-            <Link
-              to="/prontuarios"
-              className="flex items-center gap-3  transition relative text-white hover:text-gray-200 after:absolute after:left-0 after:bottom-0 after:w-full after:h-[2px] after:bg-blue-600 after:scale-x-0 hover:after:scale-x-100 after:origin-left after:transition-transform after:duration-300 text-base"
+            <NavLink
+              to="/movimentacao"
+              className={({ isActive }) =>
+                `flex items-center gap-3 text-base transition relative
+                ${isActive ? "text-white font-semibold" : "text-gray-200 hover:text-white"}
+              `
+              }
             >
               <FaListAlt size={18} />
-              {!isCollapsed && <span>Prontuários</span>}
-            </Link>
+              {!isCollapsed && <span>Movimentação</span>}
+            </NavLink>
           </li>
 
+          {/* === REGISTRAR === */}
           <li>
-            <Link
-              to="/pacientes"
-              className="flex items-center gap-3  transition relative text-white hover:text-gray-200 after:absolute after:left-0 after:bottom-0 after:w-full after:h-[2px] after:bg-blue-600 after:scale-x-0 hover:after:scale-x-100 after:origin-left after:transition-transform after:duration-300 text-base"
+            <NavLink
+              to="/registrar"
+              className={({ isActive }) =>
+                `flex items-center gap-3 text-base transition
+                ${isActive ? "text-white font-semibold" : "text-gray-200 hover:text-white"}
+              `
+              }
             >
               <FaUserPlus size={18} />
-              {!isCollapsed && <span>Pacientes</span>}
-            </Link>
+              {!isCollapsed && <span>Registrar</span>}
+            </NavLink>
           </li>
 
+          {/* === MEUS DADOS === */}
           <li>
-            <Link
-              to="/consultas"
-              className="flex items-center gap-3  transition relative text-white hover:text-gray-200 after:absolute after:left-0 after:bottom-0 after:w-full after:h-[2px] after:bg-blue-600 after:scale-x-0 hover:after:scale-x-100 after:origin-left after:transition-transform after:duration-300 text-base"
+            <NavLink
+              to="/meusDados"
+              className={({ isActive }) =>
+                `flex items-center gap-3 text-base transition
+                ${isActive ? "text-white font-semibold" : "text-gray-200 hover:text-white"}
+              `
+              }
             >
               <FaCalendarCheck size={18} />
-              {!isCollapsed && <span>Consultas</span>}
-            </Link>
+              {!isCollapsed && <span>Meus Dados</span>}
+            </NavLink>
           </li>
 
-          <li>
-            <Link
-              to="/exames"
-              className="flex items-center gap-3  transition relative text-white hover:text-gray-200 after:absolute after:left-0 after:bottom-0 after:w-full after:h-[2px] after:bg-blue-600 after:scale-x-0 hover:after:scale-x-100 after:origin-left after:transition-transform after:duration-300 text-base"
-            >
-              <FaListAlt size={18} />
-              {!isCollapsed && <span>Exames</span>}
-            </Link>
-          </li>
         </ul>
       </nav>
 
-      {/* BOTÃO SAIR */}
-      <div className="p-4 border-t border-cyan-700">
+      {/* SAIR */}
+      <div className="p-4 border-t border-blue-700">
         <button
           onClick={handleLogout}
-          className="flex items-center gap-3 text-red-400 transition hover:text-red-500 w-full cursor-pointer"
+          className="flex items-center gap-3 text-red-300 hover:text-red-500 w-full"
         >
           <MdExitToApp size={20} />
           {!isCollapsed && <span>Sair</span>}

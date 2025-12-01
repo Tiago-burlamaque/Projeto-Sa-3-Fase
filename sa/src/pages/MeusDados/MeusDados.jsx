@@ -1,6 +1,6 @@
 import React from 'react'
 
-function Inventario() {
+function MeusDados() {
   return (
     <div>
       
@@ -8,4 +8,4 @@ function Inventario() {
   )
 }
 
-export default Inventario
+export default MeusDados
