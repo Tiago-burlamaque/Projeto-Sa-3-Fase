@@ -4,9 +4,9 @@ import React from 'react'
 
 function FormCard({ title, children, onSubmit, className = '' }) {
   return (
-    <div className={`bg-blue-500 my-4 mx-2 rounded-lg p-4 flex flex-col justify-center items-center shadow ${className}`}>
+    <div className={`bg-blue-500 my-4 mx-2 rounded-lg p-4 flex flex-col items-start shadow ${className}`}>
       <h2 className="text-white text-lg font-semibold mb-2">{title}</h2>
-      <form onSubmit={onSubmit} className="w-full max-w-4xl">
+      <form onSubmit={onSubmit} className="w-full max-w-4xl ">
         {children}
       </form>
     </div>
@@ -16,10 +16,10 @@ function FormCard({ title, children, onSubmit, className = '' }) {
 function RegistrarItem() {
   return (
     <section className="min-h-screen">
-      <div className="max-w-6xl mx-auto p-4 bg-white rounded-lg shadow">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="max-w-6xl mx-auto mt-2 p-4 bg-white rounded-lg shadow" >
+        <div className=" lg:grid-cols-2 gap-6">
           {/* Inventário */}
-          <FormCard title="Registrar Inventário" className="mb-8">
+          <FormCard title="Registrar Inventário" className="mb-8 ">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-black">
               <div className="flex flex-col">
                 <label htmlFor="nomeDoItem">Nome do item</label>

@@ -1,8 +1,8 @@
-import React, { use, useState } from 'react';
+import React, { useState } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
-import { useNavigate } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 
 const Cadastro = () => {
   const [email, setEmail] = useState('');
@@ -58,11 +58,12 @@ const Cadastro = () => {
   };
 
   return (
-    <section className=" h-screen p-6 bg-white rounded-xl shadow-lg flex flex-col justify-center items-center">
-      <div className='bg-blue-500 w-100 p-10 rounded-2xl shadow-lg text-white'>
+    <section className="h-screen bg-white flex flex-col items-center justify-center px-4 ">
+      {/* Phone-shaped centered card with small lateral spaces */}
+      <div className='bg-blue-500 w-full max-w-[380px] p-4 sm:p-6 md:p-8 rounded-2xl shadow-lg text-white flex flex-col gap-6 mx-auto min-h-[450px] justify-center items-center'>
 
       <h2 className="text-2xl font-bold mb-6 text-center">Criar Usuário</h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-4 w-full">
         <div>
           <label htmlFor="email" className="block text-sm font-medium mb-1">E-mail:</label>
           <input
@@ -77,8 +78,8 @@ const Cadastro = () => {
 
         <div>
           <label htmlFor="senha" className="block text-sm font-medium mb-1">Senha:</label>
-          <input
-            type="senha"
+            <input
+            type="password"
             id="senha"
             value={senha}
             onChange={handlePasswordChange}
@@ -90,8 +91,8 @@ const Cadastro = () => {
 
         <div>
           <label htmlFor="confirmPassword" className="block text-sm font-medium mb-1">Confirmar Senha:</label>
-          <input
-            type="senha"
+            <input
+            type="password"
             id="confirmPassword"
             value={confirmPassword}
             onChange={handleConfirmPasswordChange}
@@ -104,15 +105,17 @@ const Cadastro = () => {
         </div>
 
         <div>
+          <div className='flex justify-center md:justify-end'>
           <button
             type="submit"
             disabled={isSaving}
-            className={`w-full p-2 rounded-lg text-white ${
+            className={`w-full md:w-auto p-2 rounded-lg text-white ${
               isSaving ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700 cursor-pointer'
               } transition-colors`}
               >
             {isSaving ? 'Salvando...' : 'Criar Usuário'}
           </button>
+          </div>
         </div>
       </form>
       <ToastContainer />

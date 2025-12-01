@@ -30,48 +30,51 @@ function MeusDados() {
     fetchUsuario();
     return () => controller.abort();
   }, [user]);
+
   return (
-    <section className='bg-white h-screen flex justify-center items-center'>
-      <div className='h-150 w-150  bg-blue-500 rounded-xl'>
-        <div>
-          {meuUsuario ? (
-            <section key={meuUsuario.id} className=''>
-              <nav className='h-30 bg-blue-400 shadow-md rounded-lg p-4 m-4 text-white text-center justify-center items-center flex text-2xl'>
-
-              <h1>Seja bem vindo {meuUsuario.nome || "-"}</h1>
-              {/* <p>Nome: {meuUsuario.nome || "-"}</p>
+    <section className='bg-white min-h-screen py-8 justify-center items-center  flex'>
+      <div className='md:max-w-4xl mx-auto p-4'>
+        <div className='bg-blue-500 rounded-xl p-6 flex flex-col'>
+          <div>
+            {meuUsuario ? (
+              <section key={meuUsuario.id} className='gap-4 flex flex-col'>
+                <nav className='bg-blue-400 shadow-md rounded-lg p-4 text-white text-center flex justify-center items-center text-2xl'>
+                  <h1>Seja bem vindo {meuUsuario.nome || "-"}</h1>
+                  {/* <p>Nome: {meuUsuario.nome || "-"}</p>
               <p>Email: {meuUsuario.email}</p> */}
-              {/* Avoid showing password in UI for security reasons */}
-              </nav>
+                  {/* Avoid showing password in UI for security reasons */}
+                </nav>
 
-              <nav className='h-30 bg-blue-400 shadow-md rounded-lg p-4 m-4 text-white text-center justify-center items-center flex text-2xl'>
-                <h1>Seus Dados</h1>
-              </nav>
-              <div className='flex flex-row justify-center items-center'>
+                <nav className='bg-blue-400 shadow-md rounded-lg p-4 text-white text-center flex justify-center items-center text-2xl'>
+                  <h1>Seus Dados</h1>
+                </nav>
 
-              <nav className='w-70 h-70 bg-blue-400 shadow-md rounded-lg p-4 m-4 text-white text-center justify-center items-center flex text-xl flex-col gap-2'>
-                <span>Nome: {(meuUsuario.nome)}</span>
-                <span>E-mail: {meuUsuario.email}</span>
-                <span>Data de Nascimento: {meuUsuario.data_nascimento}</span>
-                <span>Senha: {meuUsuario.senha}</span>
-                <span>CPF: {meuUsuario.cpf}</span>
-                <span>RG: {meuUsuario.rg}</span>
-                <span>Telefone: {meuUsuario.telefone}</span>
-              </nav>
-              <nav className='w-70 h-70 bg-blue-400 shadow-md rounded-lg p-4 m-4 text-white text-center justify-center items-center flex text-xl flex-col gap-2'>
-                <span>CEP: {meuUsuario.endereco.cep}</span>
-                <span>Rua: {meuUsuario.endereco.logradouro}</span>
-                <span>Número: {meuUsuario.endereco.numero}</span>
-                <span>Bairro: {meuUsuario.endereco.bairro}</span>
-                <span>Cidade: {meuUsuario.endereco.cidade}</span>
-                <span>Estado: {meuUsuario.endereco.estado}</span>
-                <span>Complemento: {meuUsuario.endereco.complemento}</span>
-              </nav>
-              </div>
-            </section>
-          ) : (
-            <p>Carregando seus dados...</p>
-          )}
+                <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+
+                  <nav className='bg-blue-400 shadow-md rounded-lg p-4 text-white text-left flex flex-col gap-2'>
+                    <span className='w-full'>Nome: {meuUsuario.nome || '-'}</span>
+                    <span className='w-full'>E-mail: {meuUsuario.email}</span>
+                    <span className='w-full'>Data de Nascimento: {meuUsuario.data_nascimento}</span>
+                    {/* Avoid showing password in UI for security reasons */}
+                    <span className='w-full'>CPF: {meuUsuario.cpf}</span>
+                    <span className='w-full'>RG: {meuUsuario.rg}</span>
+                    <span className='w-full'>Telefone: {meuUsuario.telefone}</span>
+                  </nav>
+                  <nav className='bg-blue-400 shadow-md rounded-lg p-4 text-white text-left flex flex-col gap-2'>
+                    <span>CEP: {meuUsuario.endereco?.cep || '-'}</span>
+                    <span>Rua: {meuUsuario.endereco?.logradouro || '-'}</span>
+                    <span>Número: {meuUsuario.endereco?.numero || '-'}</span>
+                    <span>Bairro: {meuUsuario.endereco?.bairro || '-'}</span>
+                    <span>Cidade: {meuUsuario.endereco?.cidade || '-'}</span>
+                    <span>Estado: {meuUsuario.endereco?.estado || '-'}</span>
+                    <span>Complemento: {meuUsuario.endereco?.complemento || '-'}</span>
+                  </nav>
+                </div>
+              </section>
+            ) : (
+              <p>Carregando seus dados...</p>
+            )}
+          </div>
         </div>
       </div>
     </section>
