@@ -75,7 +75,7 @@ const SideMenu = ({ isCollapsed: propCollapsed = false, setIsCollapsed: propSetI
               }
             >
               <MdDashboard size={20} />
-              {!isCollapsed && <span>Início</span>}
+              {!isCollapsed && <span>Inventário</span>}
             </NavLink>
           </li>
 
