@@ -5,6 +5,18 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 const Cadastro = () => {
+  const [formData, setFormData] = useState({
+    nome: '',
+    dataNascimento: '',
+    cpf: '',
+    rg: '',
+    telefone: '',
+    email: '',
+    senha: '',
+  });
+  const [nome, setNome] = useState('')
+  const [cpf, setCpf] = useState('')
+  const [telefone, setTelefone] = useState('')
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -14,6 +26,11 @@ const Cadastro = () => {
   const handleEmailChange = (e) => setEmail(e.target.value);
   const handlePasswordChange = (e) => setSenha(e.target.value);
   const handleConfirmPasswordChange = (e) => setConfirmPassword(e.target.value);
+  const handleNomeChange = (e) => setNome(e.target.value);
+  const handleDataNascimentoChange = (e) => setDataNascimento(e.target.value);
+  const handleCpfChange = (e) => setCpf(e.target.value);
+  const handleRgChange = (e) => setRg(e.target.value);
+  const handleTelefoneChange = (e) => setTelefone(e.target.value);
 
   const isPasswordValid = () => senha.length >= 8 && senha === confirmPassword;
 
@@ -64,6 +81,28 @@ const Cadastro = () => {
 
       <h2 className="text-2xl font-bold mb-6 text-center">Criar Usuário</h2>
       <form onSubmit={handleSubmit} className="space-y-4 w-full">
+          <div>
+          <label htmlFor="nome" className="block text-sm font-medium mb-1">Nome:</label>
+          <input
+            type="nome"
+            id="nome"
+            value={nome}
+            onChange={handleNomeChange}
+            required
+            className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+          <div>
+            <label htmlFor="cpf" className="block text-sm font-medium mb-1">CPF:</label>
+            <input
+              type="cpf"
+              id="cpf"
+              value={cpf}
+              onChange={handleCpfChange}
+              required
+              className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
         <div>
           <label htmlFor="email" className="block text-sm font-medium mb-1">E-mail:</label>
           <input
@@ -104,7 +143,7 @@ const Cadastro = () => {
           )}
         </div>
 
-        <div>
+        <div className='w-full'>
           <div className='flex justify-center md:justify-end'>
           <button
             type="submit"

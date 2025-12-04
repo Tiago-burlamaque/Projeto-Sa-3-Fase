@@ -1,7 +1,7 @@
 {
   "usuarios": [
     {
-      "id": 1,
+      "id": "1",
       "nome": "Tiago",
       "email": "tiago@gmail.com",
       "senha": "tiago123",
@@ -23,6 +23,11 @@
       "id": "d11e",
       "email": "teste@gmail.com",
       "senha": "teste123"
+    },
+    {
+      "id": "7b54",
+      "email": "alexandre@gmail.com",
+      "senha": "alexandre123"
     }
   ]
 }

@@ -20,9 +20,9 @@ function Inventario() {
   }, []);
 
   return (
-    <div>
+    <div className='p-4 '>
       <table className='w-full border-collapse'>
-        <thead>
+        <thead className='rounded-lg '>
           <tr> 
             <th className='text-left p-1 border bg-white text-black'>ID</th> {/* criar um card no css para th e td */}
             <th className='text-left p-1 border bg-white text-black'>Nome</th>

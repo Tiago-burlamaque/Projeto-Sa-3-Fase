@@ -40,10 +40,10 @@ function RegistrarItem() {
               <div className="flex flex-col">
                 <label htmlFor="precoTotal">Preço total</label>
                 <input id="precoTotal" name="precoTotal" type="text" placeholder="Preço Total" className="bg-white w-full rounded p-2" />
-              </div>
               <div className="col-span-full flex justify-end">
-                <button type="submit" className="bg-blue-400 text-white rounded cursor-pointer hover:bg-blue-600 transition hover:shadow-2xl w-full sm:w-auto sm:px-6 py-2">Registrar inventário</button>
               </div>
+              </div>
+                <button type="submit" className="bg-blue-400 text-white rounded cursor-pointer hover:bg-blue-600 transition hover:shadow-2xl w-full sm:w-auto sm:px-6 py-2">Registrar inventário</button>
             </div>
           </FormCard>
 
@@ -79,8 +79,8 @@ function RegistrarItem() {
                 <input id="custoTotal" name="custoTotal" type="number" className="bg-white w-full rounded p-2 text-black" />
               </div>
               <div className="col-span-full flex justify-end">
-                <button type="submit" className="bg-blue-400 text-white rounded cursor-pointer hover:bg-blue-600 transition hover:shadow-2xl w-full sm:w-auto sm:px-6 py-2">Registrar movimentação</button>
               </div>
+                <button type="submit" className="bg-blue-400 text-white rounded cursor-pointer hover:bg-blue-600 transition hover:shadow-2xl w-full sm:w-auto sm:px-6 py-2">Registrar movimentação</button>
             </div>
           </FormCard>
         </div>
