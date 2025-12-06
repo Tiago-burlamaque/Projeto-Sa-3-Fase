@@ -1,5 +1,5 @@
-import { prismaClient } from "../../../prisma/prismaClient.js";
-
+//import { prismaClient } from "../../../prisma/prismaClient.js";
+import { prismaClient } from "../../../prisma/prisma.js";
 
 class MovimentacaoController{
     constructor() {}
@@ -29,7 +29,7 @@ class MovimentacaoController{
     
     async criarMovimento(req, res) {
         try {
-          console.log("Requisição recebida em /movimentacaos:", req.body);
+          //console.log("Requisição recebida em /movimentacaos:", req.body);
       
           const movimentacao = await prismaClient.movimentacao.create({
             data: {
@@ -43,10 +43,9 @@ class MovimentacaoController{
               usuario_id: req.body.usuario_id,
             },
           });
-          console.log(" Usuário criado:", movimentacao);
           return res.status(201).json(movimentacao);
         } catch (error) {
-          console.error("Erro ao criar usuário:", error);
+          console.error("Erro ao criar movimento:", error);
       
           if (error.code === "P2002") {
             return res
@@ -68,14 +67,14 @@ class MovimentacaoController{
           });
       
           return res.status(200).json({
-            message: "Usuário atualizado!",
+            message: "Movimento atualizado!",
             data: movimentacaoAtualizado,
           });
         } catch (error) {
-          console.error(" Erro ao atualizar usuário:", error);
+          console.error(" Erro ao atualizar movimento:", error);
       
           if (error.code == "P2025") {
-            return res.status(404).send("Usuário não existe no banco");
+            return res.status(404).send("Movimento não existe no banco");
           }
           if (error.code === "P2002") {
             return res
@@ -93,14 +92,14 @@ class MovimentacaoController{
             where: { id: Number(req.params.id) },
           });
           return res.status(200).json({
-            message: "Usuário deletado!",
+            message: "Movimento deletado!",
             data: movimentacaoDeletado,
           });
         } catch (error) {
-          console.error(" Erro ao deletar usuário:", error);
+          console.error(" Erro ao deletar movimento:", error);
       
           if (error.code == "P2025") {
-            return res.status(404).send("Usuário não existe no banco");
+            return res.status(404).send("movimento não existe no banco");
           }
       
           return res.status(500).send("Erro inesperado no servidor");

@@ -7,12 +7,12 @@ const movimentacaoRouter = Router()
 
 movimentacaoRouter.get('/movimentacoes', movimentacaoController.getTodosMovimentos)
 
-movimentacaoRouter.get('/moviementacoes/:id', movimentacaoController.getPorId)
+movimentacaoRouter.get('/movimentacoes/:id', movimentacaoController.getPorId)
 
-movimentacaoRouter.post('/moviementacoes', movimentacaoController.criarMovimento)
+movimentacaoRouter.post('/movimentacoes', movimentacaoController.criarMovimento)
 
-movimentacaoRouter.put('/moviementacoes/:id', movimentacaoController.atualizarMovimento)
+movimentacaoRouter.put('/movimentacoes/:id', movimentacaoController.atualizarMovimento)
 
-movimentacaoRouter.delete('/moviementacoes/:id', movimentacaoController.deletarMovimento)
+movimentacaoRouter.delete('/movimentacoes/:id', movimentacaoController.deletarMovimento)
 
 export default movimentacaoRouter

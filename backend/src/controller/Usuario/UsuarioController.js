@@ -1,4 +1,5 @@
-import { prismaClient } from "../../../prisma/prismaClient.js";
+//import { prismaClient } from "../../../prisma/prismaClient.js";
+import { prismaClient } from "../../../prisma/prisma.js";
 
 
 class UsuarioController{
@@ -17,8 +18,8 @@ class UsuarioController{
     async getPorEmail(req, res) {
         try {
           const email = String(req.query.email);
-          const usuario = await prisma.usuario.findUnique({
-            where: { email },
+          const usuario = await prismaClient.usuario.findFirst({
+            where: { email: email },
           });
           if (!usuario) return res.status(404).send("Usuário não existe!");
           return res.json(usuario);
@@ -32,17 +33,27 @@ class UsuarioController{
         try {
           console.log("Requisição recebida em /usuarios:", req.body);
       
-        //   const usuario = await prisma.usuario.create({
-        //     data: {
-        //       nome: req.body.nome,
-        //       data_nascimento: req.body.data_nascimento,
-        //       email: req.body.email,
-        //       password: req.body.password,
-        //       cpf: req.body.cpf,
-        //       rg: req.body.rg,
-        //       telefone: req.body.telefone,
-        //     },
-        //   });
+          const usuario = await prismaClient.usuario.create({
+            data: {
+              nome: req.body.nome,
+              data_nascimento: req.body.data_nascimento,
+              email: req.body.email,
+              password: req.body.password,
+              cpf: req.body.cpf,
+              rg: req.body.rg,
+              telefone: req.body.telefone,
+              endereco: {
+                cep: req.body.endereco.cep,
+                cidade: req.body.endereco.cidade,
+                estado: req.body.endereco.estado,
+                rua: req.body.endereco.rua,
+                numero: req.body.endereco.numero,
+                complemento: req.body.endereco.complemento,
+                bairro: req.body.endereco.bairro,
+                referencia: req.body.endereco.referencia,
+              },
+            },
+          });
         //   const endereco = await prisma.endereco.create({
         //     data: {
         //         cep: req.body.cep,
@@ -57,7 +68,7 @@ class UsuarioController{
         //   })
       
           console.log(" Usuário criado:", usuario);
-          return res.status(201).json(usuario, endereco);
+          return res.status(201).json(usuario);
         } catch (error) {
           console.error("Erro ao criar usuário:", error);
       
@@ -75,7 +86,7 @@ class UsuarioController{
         try {
           const { body, params } = req;
       
-          const usuarioAtualizado = await prisma.usuario.update({
+          const usuarioAtualizado = await prismaClient.usuario.update({
             where: { id: Number(params.id) },
             data: { ...body },
           });
@@ -103,7 +114,7 @@ class UsuarioController{
     async deletarUsuario(req, res) {
         try {
             const email = String(req.query.email)
-          const usuarioDeletado = await prisma.usuario.delete({
+          const usuarioDeletado = await prismaClient.usuario.delete({
             where: { email },
           });
           return res.status(200).json({
