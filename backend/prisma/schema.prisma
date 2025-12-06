@@ -1,17 +1,11 @@
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-// This is your Prisma schema file,
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
-  provider   = "prisma-client-js"
-  output     = "../generated/prisma"
-  engineType = "client" // enable Prisma ORM without Rust
+  provider        = "prisma-client-js"
+  previewFeatures = ["relationJoins"]
 }
 
 datasource db {
   provider = "postgresql"
+  url      = "postgresql://postgres:senai@127.0.0.1:5432/almoxarifedb"
 }
 
 // Tabela usuario
@@ -24,27 +18,28 @@ model Usuario {
   cpf             String
   rg              String
   telefone        String
-  endereco        Endereco[]
+  //endereco_id     Int
+  endereco        Json       //@relation(fields: [endereco_id], references: [id])
   movimentacao    Movimentacao[]
+  token           Token[]
 
   @@map("usuario")
 }
 
-model Endereco {
-  id         Int     @id @default(autoincrement())
-  cep        String
-  cidade     String
-  estado     String
-  rua        String
-  numero     String
-  complemeto String
-  bairro     String
-  referencia String
-  usuario_id Int
-  usuario    Usuario @relation(fields: [usuario_id], references: [id])
+// model Endereco {
+//   id         Int       @id @default(autoincrement())
+//   cep        String
+//   cidade     String
+//   estado     String
+//   rua        String
+//   numero     String
+//   complemeto String
+//   bairro     String
+//   referencia String
+//   usuario    Usuario[]
 
-  @@map("endereco")
-}
+//   @@map("endereco")
+// }
 
 model Inventario {
   id             Int            @id @default(autoincrement())
@@ -72,4 +67,16 @@ model Movimentacao {
   usuario        Usuario    @relation(fields: [usuario_id], references: [id])
 
   @@map("movimentacao")
+}
+
+model Token {
+  id        Int      @id @default(autoincrement())
+  token     String   @db.VarChar(255)
+  type      String
+  usuarioId Int
+  revoked   Boolean  @default(value: false)
+  expiresAt DateTime
+  usuario   Usuario  @relation(fields: [usuarioId], references: [id])
+
+  @@map("token")
 }
