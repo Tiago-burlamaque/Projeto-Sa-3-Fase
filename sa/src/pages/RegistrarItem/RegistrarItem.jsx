@@ -1,92 +1,158 @@
+import React, { useState } from "react";
+import axios from "axios";
+import { toast } from "react-toastify";
 
-
-import React from 'react'
-
-function FormCard({ title, children, onSubmit, className = '' }) {
+/* ---------- COMPONENTE INPUT ---------- */
+function Input({ label, ...props }) {
   return (
-    <div className={`bg-blue-500 my-4 mx-2 rounded-lg p-4 flex flex-col items-start shadow ${className}`}>
-      <h2 className="text-white text-lg font-semibold mb-2">{title}</h2>
-      <form onSubmit={onSubmit} className="w-full max-w-4xl ">
-        {children}
-      </form>
+    <div className="flex flex-col gap-1">
+      <label className="text-sm font-medium">{label}</label>
+      <input
+        {...props}
+        className="border rounded p-2 focus:outline-blue-500 w-full"
+      />
     </div>
-  )
+  );
 }
 
+/* ---------- COMPONENTE PRINCIPAL ---------- */
 function RegistrarItem() {
-  return (
-    <section className="min-h-screen">
-      <div className="max-w-6xl mx-auto mt-2 p-4 bg-white rounded-lg shadow" >
-        <div className=" lg:grid-cols-2 gap-6">
-          {/* Inventário */}
-          <FormCard title="Registrar Inventário" className="mb-8 ">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-black">
-              <div className="flex flex-col">
-                <label htmlFor="nomeDoItem">Nome do item</label>
-                <input id="nomeDoItem" name="nomeDoItem" type="text" placeholder="Nome do item" className="bg-white w-full rounded p-2" />
-              </div>
-              <div className="flex flex-col">
-                <label htmlFor="patrimonio">Patrimônio</label>
-                <input id="patrimonio" name="patrimonio" type="text" placeholder="Patrimônio" className="bg-white w-full rounded p-2" />
-              </div>
-              <div className="flex flex-col">
-                <label htmlFor="quantidadeInventario">Quantidade</label>
-                <input id="quantidadeInventario" name="quantidadeInventario" type="number" placeholder="Quantidade" className="bg-white w-full rounded p-2" />
-              </div>
-              <div className="flex flex-col">
-                <label htmlFor="precoUnitario">Preço unitário</label>
-                <input id="precoUnitario" name="precoUnitario" type="text" placeholder="Preço unitário" className="bg-white w-full rounded p-2" />
-              </div>
-              <div className="flex flex-col">
-                <label htmlFor="precoTotal">Preço total</label>
-                <input id="precoTotal" name="precoTotal" type="text" placeholder="Preço Total" className="bg-white w-full rounded p-2" />
-              <div className="col-span-full flex justify-end">
-              </div>
-              </div>
-                <button type="submit" className="bg-blue-400 text-white rounded cursor-pointer hover:bg-blue-600 transition hover:shadow-2xl w-full sm:w-auto sm:px-6 py-2">Registrar inventário</button>
-            </div>
-          </FormCard>
+  const [isSaving, setIsSaving] = useState(false);
 
-          {/* Movimentação */}
-          <FormCard title="Registrar Movimentação">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-black">
-              <div className="flex flex-col">
-                <label htmlFor="data">Data</label>
-                <input id="data" name="data" type="date" className="bg-white w-full rounded p-2 text-black" />
-              </div>
-              <div className="flex flex-col">
-                <label htmlFor="tipoDaMovimentacao">Tipo da movimentação</label>
-                <select id="tipoDaMovimentacao" name="tipoDaMovimentacao" className="bg-white w-full rounded p-2 text-black">
-                  <option value="">Selecione</option>
-                  <option value="entrada">Entrada</option>
-                  <option value="saida">Saída</option>
-                </select>
-              </div>
-              <div className="flex flex-col">
-                <label htmlFor="nomeDoCliente">Nome do cliente</label>
-                <input id="nomeDoCliente" name="nomeDoCliente" type="text" className="bg-white w-full rounded p-2 text-black" />
-              </div>
-              <div className="flex flex-col">
-                <label htmlFor="nomeDoItemMov">Nome do item</label>
-                <input id="nomeDoItemMov" name="nomeDoItemMov" type="text" className="bg-white w-full rounded p-2 text-black" />
-              </div>
-              <div className="flex flex-col">
-                <label htmlFor="quantidadeMov">Quantidade</label>
-                <input id="quantidadeMov" name="quantidadeMov" type="number" className="bg-white w-full rounded p-2 text-black" />
-              </div>
-              <div className="flex flex-col">
-                <label htmlFor="custoTotal">Custo total</label>
-                <input id="custoTotal" name="custoTotal" type="number" className="bg-white w-full rounded p-2 text-black" />
-              </div>
-              <div className="col-span-full flex justify-end">
-              </div>
-                <button type="submit" className="bg-blue-400 text-white rounded cursor-pointer hover:bg-blue-600 transition hover:shadow-2xl w-full sm:w-auto sm:px-6 py-2">Registrar movimentação</button>
+  const [formDataItem, setFormDataItem] = useState({
+    nome_item: "",
+    estoque: "",
+    patrimonio: "",
+    preco_unitario: "",
+    preco_total: "",
+  });
+
+  const [formDataMov, setFormDataMov] = useState({
+    data_movimento: "",
+    tipo_movimento: "",
+    nome_cliente: "",
+    item: "",
+    quantidade: "",
+    custo_total: "",
+  });
+
+  /* ---------- HANDLERS ---------- */
+  const handleChange = (setState) => (e) => {
+    const { name, value } = e.target;
+    setState((prev) => ({ ...prev, [name]: value }));
+  };
+
+  /* ---------- SUBMITS ---------- */
+  const handleSubmitItem = async (e) => {
+    e.preventDefault();
+    setIsSaving(true);
+
+    try {
+      await axios.post("http://localhost:3001/inventario", formDataItem);
+      toast.success("Item cadastrado com sucesso!");
+
+      setFormDataItem({
+        nome_item: "",
+        estoque: "",
+        patrimonio: "",
+        preco_unitario: "",
+        preco_total: "",
+      });
+    } catch {
+      toast.error("Erro ao salvar o item");
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleSubmitMov = async (e) => {
+    e.preventDefault();
+
+    try {
+      await axios.post("http://localhost:3001/movimentacoes", formDataMov);
+      toast.success("Movimentação registrada com sucesso!");
+
+      setFormDataMov({
+        data_movimento: "",
+        tipo_movimento: "",
+        nome_cliente: "",
+        item: "",
+        quantidade: "",
+        custo_total: "",
+      });
+    } catch {
+      toast.error("Erro ao salvar movimentação");
+    }
+  };
+
+  return (
+    <section className="min-h-screen bg-gray-100 flex justify-center px-4 py-8">
+      <div className="w-full max-w-5xl space-y-6">
+
+        {/* -------- INVENTÁRIO -------- */}
+        <form
+          onSubmit={handleSubmitItem}
+          className="bg-white rounded-2xl shadow p-6"
+        >
+          <h2 className="text-xl font-semibold mb-4">Cadastro de Item</h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Input label="Nome do item" name="nome_item" value={formDataItem.nome_item} onChange={handleChange(setFormDataItem)} />
+            <Input label="Estoque" name="estoque" value={formDataItem.estoque} onChange={handleChange(setFormDataItem)} />
+            <Input label="Patrimônio" type="number" name="patrimonio" value={formDataItem.patrimonio} onChange={handleChange(setFormDataItem)} />
+            <Input label="Preço Unitário" type="number" name="preco_unitario" value={formDataItem.preco_unitario} onChange={handleChange(setFormDataItem)} />
+            <Input label="Preço Total" type="number" name="preco_total" value={formDataItem.preco_total} onChange={handleChange(setFormDataItem)} />
+          </div>
+
+          <button
+            type="submit"
+            disabled={isSaving}
+            className="mt-6 w-full md:w-auto px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+          >
+            {isSaving ? "Salvando..." : "Registrar Item"}
+          </button>
+        </form>
+
+        {/* -------- MOVIMENTAÇÃO -------- */}
+        <form
+          onSubmit={handleSubmitMov}
+          className="bg-white rounded-2xl shadow p-6"
+        >
+          <h2 className="text-xl font-semibold mb-4">Movimentação</h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Input label="Data da Movimentação" type="date" name="data_movimento" value={formDataMov.data_movimento} onChange={handleChange(setFormDataMov)} />
+
+            <div className="flex flex-col gap-1">
+              <label className="text-sm font-medium">Tipo</label>
+              <select
+                name="tipo_movimento"
+                value={formDataMov.tipo_movimento}
+                onChange={handleChange(setFormDataMov)}
+                className="border rounded p-2 focus:outline-blue-500"
+              >
+                <option value="">Selecionar</option>
+                <option value="entrada">Entrada</option>
+                <option value="saida">Saída</option>
+              </select>
             </div>
-          </FormCard>
-        </div>
+
+            <Input label="Nome do cliente" name="nome_cliente" value={formDataMov.nome_cliente} onChange={handleChange(setFormDataMov)} />
+            <Input label="Item" name="item" value={formDataMov.item} onChange={handleChange(setFormDataMov)} />
+            <Input label="Quantidade" type="number" name="quantidade" value={formDataMov.quantidade} onChange={handleChange(setFormDataMov)} />
+            <Input label="Custo Total" type="number" name="custo_total" value={formDataMov.custo_total} onChange={handleChange(setFormDataMov)} />
+          </div>
+
+          <button
+            type="submit"
+            className="mt-6 w-full md:w-auto px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+          >
+            Registrar Movimentação
+          </button>
+        </form>
       </div>
     </section>
-  )
+  );
 }
 
-export default RegistrarItem
+export default RegistrarItem;

@@ -1,33 +1,76 @@
 {
   "usuarios": [
     {
-      "id": "1",
-      "nome": "Tiago",
+      "id": "cea5",
       "email": "tiago@gmail.com",
       "senha": "tiago123",
-      "data_nascimento": "2008-06-10",
-      "cpf": "12345678901",
-      "rg": "123456789",
-      "telefone": "11999999999",
+      "nome": "tiago",
+      "data_nascimento": "2008-10-06",
+      "cpf": "478.589.698-52",
+      "rg": "4785955",
+      "telefone": "(48) 79857-4658",
       "endereco": {
-        "cep": "01234567",
-        "logradouro": "Rua A",
-        "numero": "100",
-        "complemento": "Apto 101",
-        "bairro": "Bairro B",
-        "cidade": "Cidade C",
-        "estado": "Estado D"
+        "cep": "88058-100",
+        "cidade": "Florianópolis",
+        "estado": "SC",
+        "rua": "Rua Intendente João Nunes Vieira",
+        "numero": "143",
+        "complemento": "",
+        "bairro": "Ingleses do Rio Vermelho",
+        "referencia": ""
       }
     },
     {
-      "id": "d11e",
-      "email": "teste@gmail.com",
-      "senha": "teste123"
-    },
+      "id": "60dd",
+      "nome": "ronaldo",
+      "email": "ronaldo@gmail.com",
+      "senha": "ronaldo123",
+      "data_nascimento": "2008-10-06",
+      "cpf": "478.589.512-58",
+      "rg": "77485965",
+      "telefone": "(48) 99648-5221",
+      "address": {
+        "cep": "88058-100",
+        "cidade": "Florianópolis",
+        "estado": "SC",
+        "rua": "Rua Intendente João Nunes Vieira",
+        "numero": "885",
+        "complemento": "",
+        "bairro": "Ingleses do Rio Vermelho",
+        "referencia": ""
+      },
+      "endereco": {
+        "cep": "88058-100",
+        "cidade": "Florianópolis",
+        "estado": "SC",
+        "rua": "Rua Intendente João Nunes Vieira",
+        "numero": "885",
+        "complemento": "",
+        "bairro": "Ingleses do Rio Vermelho",
+        "referencia": ""
+      }
+    }
+  ],
+  "inventario": [
+    {},
     {
-      "id": "7b54",
-      "email": "alexandre@gmail.com",
-      "senha": "alexandre123"
+      "id": "815f",
+      "nome_item": "makita",
+      "estoque": "1",
+      "patrimonio": "140",
+      "preco_unitario": "40",
+      "preco_total": "180"
+    }
+  ],
+  "movimentacoes": [
+    {
+      "id": "5125",
+      "data_movimento": "2025-04-04",
+      "tipo_movimento": "entrada",
+      "nome_cliente": "Tiago",
+      "item": "makita",
+      "quantidade": "2",
+      "custo_total": "280"
     }
   ]
 }

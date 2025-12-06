@@ -131,7 +131,7 @@ const SideMenu = ({ isCollapsed: propCollapsed = false, setIsCollapsed: propSetI
       <div className="p-4 border-t border-blue-700">
         <button
           onClick={handleLogout}
-          className="flex items-center gap-3 text-red-300 hover:text-red-500 w-full"
+          className="flex items-center gap-3 w-full cursor-pointer text-white hover:text-red-600 transition"
         >
           <MdExitToApp size={20} />
           {!isCollapsed && <span>Sair</span>}

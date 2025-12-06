@@ -1,164 +1,207 @@
-import React, { useState } from 'react';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { IMaskInput } from "react-imask";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
+/* ✅ COMPONENTE INPUT (corrige o erro) */
+const Input = ({ label, className = "", ...props }) => {
+  return (
+    <div className="flex flex-col gap-1 w-full">
+      {label && (
+        <label className="text-sm font-medium text-gray-700">
+          {label}
+        </label>
+      )}
+
+      <input
+        {...props}
+        className={`border rounded-lg p-2 w-full 
+          focus:outline-none focus:ring-2 focus:ring-blue-500 ${className}`}
+      />
+    </div>
+  );
+};
 
 const Cadastro = () => {
-  const [formData, setFormData] = useState({
-    nome: '',
-    dataNascimento: '',
-    cpf: '',
-    rg: '',
-    telefone: '',
-    email: '',
-    senha: '',
-  });
-  const [nome, setNome] = useState('')
-  const [cpf, setCpf] = useState('')
-  const [telefone, setTelefone] = useState('')
-  const [email, setEmail] = useState('');
-  const [senha, setSenha] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [isPasswordMatch, setIsPasswordMatch] = useState(true);
-  const [isSaving, setIsSaving] = useState(false);
-
-  const handleEmailChange = (e) => setEmail(e.target.value);
-  const handlePasswordChange = (e) => setSenha(e.target.value);
-  const handleConfirmPasswordChange = (e) => setConfirmPassword(e.target.value);
-  const handleNomeChange = (e) => setNome(e.target.value);
-  const handleDataNascimentoChange = (e) => setDataNascimento(e.target.value);
-  const handleCpfChange = (e) => setCpf(e.target.value);
-  const handleRgChange = (e) => setRg(e.target.value);
-  const handleTelefoneChange = (e) => setTelefone(e.target.value);
-
-  const isPasswordValid = () => senha.length >= 8 && senha === confirmPassword;
-
   const navigate = useNavigate();
+
+  const [confirmarSenha, setConfirmarSenha] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
+  const [isPasswordMatch, setIsPasswordMatch] = useState(true);
+
+  const [formData, setFormData] = useState({
+    nome: "",
+    email: "",
+    senha: "",
+    data_nascimento: "",
+    cpf: "",
+    rg: "",
+    telefone: "",
+    address: {
+      cep: "",
+      cidade: "",
+      estado: "",
+      rua: "",
+      numero: "",
+      complemento: "",
+      bairro: "",
+      referencia: "",
+    },
+  });
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleAddressChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      address: { ...prev.address, [name]: value },
+    }));
+  };
+
+  const fetchAddressData = async (cep) => {
+    try {
+      const res = await axios.get(`https://viacep.com.br/ws/${cep}/json/`);
+      setFormData((prev) => ({
+        ...prev,
+        address: {
+          ...prev.address,
+          rua: res.data.logradouro || "",
+          bairro: res.data.bairro || "",
+          cidade: res.data.localidade || "",
+          estado: res.data.uf || "",
+        },
+      }));
+    } catch {
+      toast.error("Erro ao buscar CEP");
+    }
+  };
+
+  const handleCepBlur = (e) => {
+    const cep = e.target.value.replace(/\D/g, "");
+    if (cep.length === 8) fetchAddressData(cep);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!isPasswordValid()) {
+    if (formData.senha.length < 8 || formData.senha !== confirmarSenha) {
       setIsPasswordMatch(false);
+      toast.error("As senhas não correspondem");
       return;
     }
 
     setIsSaving(true);
 
     try {
-      // Prevent registering the same email several times
-      const existing = await axios.get('http://localhost:3001/usuarios', { params: { email } });
-      if (existing.data.length > 0) {
-        toast.error('Email já cadastrado. Use outro email ou faça login.', { autoClose: 2000, hideProgressBar: true });
-        setIsSaving(false);
-        return;
-      }
-      await axios.post('http://localhost:3001/usuarios', { email, senha });
+      await axios.post("http://localhost:3001/usuarios", {
+        ...formData,
+        endereco: formData.address,
+      });
 
-      setIsSaving(false);
-      toast.success('Usuário criado com sucesso!', {
-        // position: toast.POSITION.TOP_CENTER,
+      toast.success("Usuário criado!", {
         autoClose: 2000,
-        hideProgressBar: true,
-        onClose: () => navigate('/'),
+        onClose: () => navigate("/"),
       });
-    } catch (error) {
-      console.error('Erro ao criar usuário:', error);
-      toast.error('Erro ao criar o usuário!', {
-        // position: toast.POSITION.TOP_RIGHT,
-        autoClose: 2000,
-        hideProgressBar: true,
-      });
+    } catch {
+      toast.error("Erro ao criar usuário");
+    } finally {
       setIsSaving(false);
     }
   };
 
   return (
-    <section className="h-screen bg-white flex flex-col items-center justify-center px-4 ">
-      {/* Phone-shaped centered card with small lateral spaces */}
-      <div className='bg-blue-500 w-full max-w-[380px] p-4 sm:p-6 md:p-8 rounded-2xl shadow-lg text-white flex flex-col gap-6 mx-auto min-h-[450px] justify-center items-center'>
+    <section className="min-h-screen bg-gray-100 flex items-center justify-center px-4 py-4">
+      <div className="w-full max-w-4xl bg-white rounded-2xl shadow-lg p-6 md:p-10">
+        <h1 className="text-2xl font-bold text-center mb-8">
+          Criar Conta
+        </h1>
 
-      <h2 className="text-2xl font-bold mb-6 text-center">Criar Usuário</h2>
-      <form onSubmit={handleSubmit} className="space-y-4 w-full">
+        <form onSubmit={handleSubmit} className="space-y-8">
+          {/* Dados pessoais */}
           <div>
-          <label htmlFor="nome" className="block text-sm font-medium mb-1">Nome:</label>
-          <input
-            type="nome"
-            id="nome"
-            value={nome}
-            onChange={handleNomeChange}
-            required
-            className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-          <div>
-            <label htmlFor="cpf" className="block text-sm font-medium mb-1">CPF:</label>
-            <input
-              type="cpf"
-              id="cpf"
-              value={cpf}
-              onChange={handleCpfChange}
-              required
-              className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-        <div>
-          <label htmlFor="email" className="block text-sm font-medium mb-1">E-mail:</label>
-          <input
-            type="email"
-            id="email"
-            value={email}
-            onChange={handleEmailChange}
-            required
-            className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
+            <h2 className="text-lg font-semibold mb-4 text-gray-700">
+              Dados Pessoais
+            </h2>
 
-        <div>
-          <label htmlFor="senha" className="block text-sm font-medium mb-1">Senha:</label>
-            <input
-            type="password"
-            id="senha"
-            value={senha}
-            onChange={handlePasswordChange}
-            required
-            minLength={8}
-            className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <Input label="Nome" name="nome" value={formData.nome} onChange={handleInputChange} />
+              <Input label="Email" type="email" name="email" value={formData.email} onChange={handleInputChange} />
+              <Input label="Senha" type="password" name="senha" value={formData.senha} onChange={handleInputChange} />
+              <Input label="Confirmar senha" type="password" value={confirmarSenha} onChange={(e) => setConfirmarSenha(e.target.value)} />
+              <Input label="Data de nascimento" type="date" name="data_nascimento" value={formData.data_nascimento} onChange={handleInputChange} />
 
-        <div>
-          <label htmlFor="confirmPassword" className="block text-sm font-medium mb-1">Confirmar Senha:</label>
-            <input
-            type="password"
-            id="confirmPassword"
-            value={confirmPassword}
-            onChange={handleConfirmPasswordChange}
-            required
-            className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          {!isPasswordMatch && (
-            <p className="text-red-500 text-sm mt-1">As senhas não correspondem.</p>
-          )}
-        </div>
+              <div className="flex flex-col gap-1">
+                <label className="text-sm font-medium text-gray-700">CPF</label>
+                <IMaskInput
+                  mask="000.000.000-00"
+                  value={formData.cpf}
+                  onAccept={(v) => setFormData((p) => ({ ...p, cpf: v }))}
+                  className="border rounded-lg p-2"
+                />
+              </div>
 
-        <div className='w-full'>
-          <div className='flex justify-center md:justify-end'>
-          <button
-            type="submit"
-            disabled={isSaving}
-            className={`w-full md:w-auto p-2 rounded-lg text-white ${
-              isSaving ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700 cursor-pointer'
-              } transition-colors`}
-              >
-            {isSaving ? 'Salvando...' : 'Criar Usuário'}
-          </button>
-          </div>
-        </div>
-      </form>
-      <ToastContainer />
+              <Input label="RG" name="rg" value={formData.rg} onChange={handleInputChange} />
+
+              <div className="flex flex-col gap-1">
+                <label className="text-sm font-medium text-gray-700">Telefone</label>
+                <IMaskInput
+                  mask="(00) 00000-0000"
+                  value={formData.telefone}
+                  onAccept={(v) => setFormData((p) => ({ ...p, telefone: v }))}
+                  className="border rounded-lg p-2"
+                />
+              </div>
             </div>
+          </div>
+
+          {/* Endereço */}
+          <div>
+            <h2 className="text-lg font-semibold mb-4 text-gray-700">
+              Endereço
+            </h2>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <IMaskInput
+                mask="00000-000"
+                value={formData.address.cep}
+                onAccept={(v) =>
+                  handleAddressChange({ target: { name: "cep", value: v } })
+                }
+                onBlur={handleCepBlur}
+                className="border rounded-lg p-2"
+                placeholder="CEP"
+              />
+
+              <Input label="Rua" name="rua" value={formData.address.rua} onChange={handleAddressChange} />
+              <Input label="Número" name="numero" value={formData.address.numero} onChange={handleAddressChange} />
+              <Input label="Bairro" name="bairro" value={formData.address.bairro} onChange={handleAddressChange} />
+              <Input label="Cidade" name="cidade" value={formData.address.cidade} onChange={handleAddressChange} />
+              <Input label="Estado" name="estado" value={formData.address.estado} onChange={handleAddressChange} />
+            </div>
+          </div>
+
+          {!isPasswordMatch && (
+            <p className="text-red-500 text-sm">
+              As senhas não correspondem
+            </p>
+          )}
+
+          <button
+            disabled={isSaving}
+            className="w-full px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-60 cursor-pointer"
+          >
+            {isSaving ? "Salvando..." : "Criar Usuário"}
+          </button>
+        </form>
+      </div>
+
+      <ToastContainer />
     </section>
   );
 };

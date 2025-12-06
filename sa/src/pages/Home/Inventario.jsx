@@ -1,54 +1,82 @@
-import { useState, useEffect } from 'react';
-import axios from 'axios';
-import React from 'react'
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { Table } from "@radix-ui/themes";
 
 function Inventario() {
-
-  const [inventario, setInventario] = useState([])
-
-  const fetchInventario = async () => {
-    try {
-        const response = await axios.get('http://localhost:3000/inventario'); //usar o auth depois da verificação
-        setInventario(response.data);
-    } catch (error) {
-        console.error('Erro ao buscar item:', error);
-    }
-  };
+  const [inventario, setInventario] = useState([]);
 
   useEffect(() => {
-    fetchInventario();
+    axios
+      .get("http://localhost:3001/inventario")
+      .then((res) => setInventario(res.data))
+      .catch((err) => console.error(err));
   }, []);
 
   return (
-    <div className='p-4 '>
-      <table className='w-full border-collapse'>
-        <thead className='rounded-lg '>
-          <tr> 
-            <th className='text-left p-1 border bg-white text-black'>ID</th> {/* criar um card no css para th e td */}
-            <th className='text-left p-1 border bg-white text-black'>Nome</th>
-            <th className='text-left p-1 border bg-white text-black'>Estoque</th>
-            <th className='text-left p-1 border bg-white text-black'>N° Patrimônio</th>
-            <th className='text-left p-1 border bg-white text-black'>Custo Unitário</th>
-            <th className='text-left p-1 border bg-white text-black'>Custo Total</th>
-            <th className='text-left p-1 border bg-white text-black'>Ações</th> {/* criar botoes para editar e deletar */}
-          </tr>
-        </thead>
-        <tbody>
-          {inventario.map((item) => (
-            <tr>
-              <td>{item.id}</td>
-              <td>{item.nome_item}</td>
-              <td>{item.estoque}</td>
-              <td>{item.patrimonio}</td>
-              <td>{item.preco_unitario}</td>
-              <td>{item.preco_total}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      
+    <div className="p-4 space-y-4">
+
+      {/* ✅ MOBILE – CARDS */}
+      <div className="md:hidden space-y-4">
+        {inventario.map((item) => (
+          <div
+            key={item.id}
+            className="bg-white rounded-xl shadow p-4 space-y-2"
+          >
+            <div className="flex justify-between text-sm text-gray-500">
+              <span>ID #{item.id}</span>
+              <span>Estoque: {item.estoque}</span>
+            </div>
+
+            <div className="font-semibold text-lg">
+              {item.nome_item}
+            </div>
+
+            <div className="text-sm">
+              Patrimônio: {item.patrimonio}
+            </div>
+
+            <div className="flex justify-between items-center">
+              <span className="text-sm">
+                R$ {item.preco_unitario}
+              </span>
+              <span className="font-bold">
+                R$ {item.preco_total}
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* ✅ DESKTOP – TABELA */}
+      <div className="hidden md:block">
+        <Table.Root>
+          <Table.Header>
+            <Table.Row>
+              <Table.ColumnHeaderCell>ID</Table.ColumnHeaderCell>
+              <Table.ColumnHeaderCell>Nome</Table.ColumnHeaderCell>
+              <Table.ColumnHeaderCell>Estoque</Table.ColumnHeaderCell>
+              <Table.ColumnHeaderCell>Patrimônio</Table.ColumnHeaderCell>
+              <Table.ColumnHeaderCell>Custo Unitário</Table.ColumnHeaderCell>
+              <Table.ColumnHeaderCell>Custo Total</Table.ColumnHeaderCell>
+            </Table.Row>
+          </Table.Header>
+
+          <Table.Body>
+            {inventario.map((item) => (
+              <Table.Row key={item.id}>
+                <Table.RowHeaderCell>{item.id}</Table.RowHeaderCell>
+                <Table.Cell>{item.nome_item}</Table.Cell>
+                <Table.Cell>{item.estoque}</Table.Cell>
+                <Table.Cell>{item.patrimonio}</Table.Cell>
+                <Table.Cell>{item.preco_unitario}</Table.Cell>
+                <Table.Cell>{item.preco_total}</Table.Cell>
+              </Table.Row>
+            ))}
+          </Table.Body>
+        </Table.Root>
+      </div>
     </div>
-  )
+  );
 }
 
-export default Inventario
+export default Inventario;
