@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
 import axios from 'axios'
@@ -23,11 +23,18 @@ function LoginForm() {
     e.preventDefault();
 
     try {
-      const response = await axios.get('http://localhost:3001/usuarios', {
-        params: { email, senha },
-      });
+      // const response = await axios.get('http://localhost:3001/usuarios', {
+      //   params: { email, senha },
+      // });
+
+      const response = await axios.post('http://localhost:3000/auth/login', {
+        email: email,
+        password: senha
+      })
 
       console.log("resposta", response)
+      const token = response.data.accesToken
+
       if (response.data.length === 0) {
         toast.error('Usuário não encontrado. Verifique o e-mail e senha.', {
           autoClose: 2000,
@@ -36,7 +43,7 @@ function LoginForm() {
         return;
       }
 
-      login(email); // <-- atualiza contexto
+      login(email, token); // <-- atualiza contexto
       toast.success('Login realizado com sucesso!', { autoClose: 2000 });
 
       setTimeout(() => navigate('/inventario'), 2000);

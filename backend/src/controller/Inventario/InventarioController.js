@@ -24,7 +24,6 @@ class InventarioController {
     try {
       const item = await prismaClient.inventario.findUnique({
         where: { id: Number(req.params.id) },
-        //include: { movimentacao: true }
       });
 
       if (!item) return res.status(404).send("Item não existe!");

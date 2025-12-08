@@ -1,9 +1,9 @@
-// Path: tests/usuarios.test.js
+
 
 import bcrypt from "bcrypt";
 import request from "supertest";
-import { app } from "../../../../src/app.js";
-import { prismaClient } from "../../../../prisma/prisma.js";
+import { app } from "../../../src/app.js";
+import { prismaClient } from "../../../prisma/prisma.js";
 
 async function clearDatabase() {
   await prismaClient.movimentacao.deleteMany({});
