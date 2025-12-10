@@ -7,7 +7,7 @@ function Movimentacao() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3001/movimentacoes")
+      .get("http://localhost:3000/mov/movimentacao")
       .then((res) => setMovimentacoes(res.data))
       .catch((err) => console.error(err));
   }, []);

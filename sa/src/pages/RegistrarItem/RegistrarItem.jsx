@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-/* ---------- COMPONENTE INPUT ---------- */
 function Input({ label, ...props }) {
   return (
     <div className="flex flex-col gap-1">
@@ -15,13 +14,12 @@ function Input({ label, ...props }) {
   );
 }
 
-/* ---------- COMPONENTE PRINCIPAL ---------- */
 function RegistrarItem() {
   const [isSaving, setIsSaving] = useState(false);
 
   const [formDataItem, setFormDataItem] = useState({
     nome_item: "",
-    estoque: "",
+    estoque: 0,
     patrimonio: "",
     preco_unitario: "",
     preco_total: "",
@@ -29,58 +27,72 @@ function RegistrarItem() {
 
   const [formDataMov, setFormDataMov] = useState({
     data_movimento: "",
-    tipo_movimento: "",
     nome_cliente: "",
     item: "",
-    quantidade: "",
-    custo_total: "",
+    quantidade: 0,
+    custo_total: 0,
   });
 
-  /* ---------- HANDLERS ---------- */
   const handleChange = (setState) => (e) => {
     const { name, value } = e.target;
     setState((prev) => ({ ...prev, [name]: value }));
   };
 
-  /* ---------- SUBMITS ---------- */
+  /* ====== SUBMIT ITEM ====== */
   const handleSubmitItem = async (e) => {
     e.preventDefault();
     setIsSaving(true);
 
+    // const token = localStorage.getItem("token"); // ← AQUI ESTÁ A CORREÇÃO
+
     try {
-      await axios.post("http://localhost:3001/inventario", formDataItem);
+      await axios.post("http://localhost:3000/inventario/itens", formDataItem, {
+        // headers: {
+        //   Authorization: `Bearer ${token}`,
+        // },
+      });
+
       toast.success("Item cadastrado com sucesso!");
 
       setFormDataItem({
         nome_item: "",
-        estoque: "",
+        estoque: 0,
         patrimonio: "",
         preco_unitario: "",
         preco_total: "",
       });
-    } catch {
+    } catch (err) {
+      console.error(err);
       toast.error("Erro ao salvar o item");
     } finally {
       setIsSaving(false);
     }
   };
 
+  /* ====== SUBMIT MOVIMENTAÇÃO ====== */
   const handleSubmitMov = async (e) => {
     e.preventDefault();
 
+    // const token = localStorage.getItem("token"); // ← AQUI TAMBÉM
+
     try {
-      await axios.post("http://localhost:3001/movimentacoes", formDataMov);
+      await axios.post("http://localhost:3000/mov/movimentacao", formDataMov, {
+        // headers: {
+        //   Authorization: `Bearer ${token}`,
+        // },
+      });
+
       toast.success("Movimentação registrada com sucesso!");
 
       setFormDataMov({
-        data_movimento: "",
-        tipo_movimento: "",
-        nome_cliente: "",
-        item: "",
-        quantidade: "",
-        custo_total: "",
+        data_movimento,
+        nome_cliente,
+        item,
+        quantidade,
+        custo_total,
       });
-    } catch {
+    } catch (err) {
+      console.error(err);
       toast.error("Erro ao salvar movimentação");
     }
   };
@@ -89,7 +101,7 @@ function RegistrarItem() {
     <section className="min-h-screen bg-gray-100 flex justify-center px-4 py-8">
       <div className="w-full max-w-5xl space-y-6">
 
-        {/* -------- INVENTÁRIO -------- */}
+        {/* CADASTRO DE ITEM */}
         <form
           onSubmit={handleSubmitItem}
           className="bg-white rounded-2xl shadow p-6"
@@ -97,7 +109,7 @@ function RegistrarItem() {
           <h2 className="text-xl font-semibold mb-4">Cadastro de Item</h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Input label="Nome do item" name="nome_item" value={formDataItem.nome_item} onChange={handleChange(setFormDataItem)} />
+            <Input  label="Nome do item" name="nome_item" value={formDataItem.nome_item} onChange={handleChange(setFormDataItem)} />
             <Input label="Estoque" name="estoque" value={formDataItem.estoque} onChange={handleChange(setFormDataItem)} />
             <Input label="Patrimônio" type="number" name="patrimonio" value={formDataItem.patrimonio} onChange={handleChange(setFormDataItem)} />
             <Input label="Preço Unitário" type="number" name="preco_unitario" value={formDataItem.preco_unitario} onChange={handleChange(setFormDataItem)} />
@@ -107,13 +119,13 @@ function RegistrarItem() {
           <button
             type="submit"
             disabled={isSaving}
-            className="mt-6 w-full md:w-auto px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+            className="mt-6 w-full md:w-auto px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition cursor-pointer"
           >
             {isSaving ? "Salvando..." : "Registrar Item"}
           </button>
         </form>
 
-        {/* -------- MOVIMENTAÇÃO -------- */}
+        {/* MOVIMENTAÇÃO */}
         <form
           onSubmit={handleSubmitMov}
           className="bg-white rounded-2xl shadow p-6"
@@ -145,7 +157,7 @@ function RegistrarItem() {
 
           <button
             type="submit"
-            className="mt-6 w-full md:w-auto px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+            className="mt-6 w-full md:w-auto px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition cursor-pointer"
           >
             Registrar Movimentação
           </button>

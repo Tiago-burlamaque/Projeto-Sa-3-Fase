@@ -54,20 +54,23 @@ model Inventario {
 }
 
 model Movimentacao {
-  id             Int        @id @default(autoincrement())
-  data_movimento DateTime   @default(now())
+  id             Int          @id @default(autoincrement())
+  data_movimento DateTime     @default(now())
   tipo_movimento String
   nome_cliente   String
   item           String
   quantidade     Int
-  custo_total    String
-  inventario_id  Int
-  inventario     Inventario @relation(fields: [inventario_id], references: [id])
-  usuario_id     Int
-  usuario        Usuario    @relation(fields: [usuario_id], references: [id])
+  custo_total    Int
+  
+  inventario_id  Int?
+  inventario     Inventario?  @relation(fields: [inventario_id], references: [id])
+
+  usuario_id     Int?
+  usuario        Usuario?     @relation(fields: [usuario_id], references: [id])
 
   @@map("movimentacao")
 }
+
 
 model Token {
   id        Int      @id @default(autoincrement())

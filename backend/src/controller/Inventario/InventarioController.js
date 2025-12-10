@@ -47,12 +47,14 @@ class InventarioController {
         preco_unitario,
         preco_total
       } = req.body;
-
+       
+      const partrimonioUpdt = Number(patrimonio)
+      const estoqueUpdt = Number(estoque)
       const novoItem = await prismaClient.inventario.create({
         data: {
           nome_item,
-          estoque,
-          patrimonio,
+          estoque: estoqueUpdt,
+          patrimonio: partrimonioUpdt,
           preco_unitario,
           preco_total
         }

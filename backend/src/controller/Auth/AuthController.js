@@ -12,68 +12,59 @@ import {
 class AuthController {
     constructor() { }
 
-    async register(
-        req,
-        res
-    ) {
+    async register(req, res) {
         try {
             const { email, password, nome, telefone, rg, cpf, data_nascimento, endereco } = req.body;
-            // Validação básica
+
             if (!email || !password) {
                 return res.status(400).json({ error: "Email e password são obrigatórios" });
             }
-            // Verificar se usuário já existe
+
             const existingUser = await prismaClient.usuario.findUnique({
                 where: { email },
             });
-            console.log(existingUser)
+
             if (existingUser) {
                 return res.status(409).json({ error: "Usuário já existe" });
             }
-            // Hash da password com bcrypt
-            const saltRounds = 10;
-            const hashedPassword = await bcrypt.hash(password, saltRounds);
-            // Criar usuário no banco de dados
+
+            const hashedPassword = await bcrypt.hash(password, 10);
+
             const user = await prismaClient.usuario.create({
-                data: { email, password: hashedPassword, nome: nome || null, telefone: telefone, rg: rg, cpf: cpf, data_nascimento: data_nascimento, endereco: endereco },
+                data: {
+                    email,
+                    password: hashedPassword,
+                    nome,
+                    telefone,
+                    rg,
+                    cpf,
+                    data_nascimento,
+                    endereco,
+                },
                 select: {
                     id: true,
                     email: true,
                     nome: true,
                 },
             });
-            return res.status(201).json(user);
-        } catch (error) {
-            console.error("Erro no registro:", error);
-            res.status(500).json({ error: "Erro interno do servidor" });
-        }
-        return res.status(400).send("Not Found");
-    };
 
-    async login(req, res) {
-        try {
-            const { email, password } = req.body;
-            const user = await prismaClient.usuario.findUnique({ where: { email } }); // Verificar se usuário existe e password está correta
-            if (!user || !(await bcrypt.compare(password, user.password))) {
-                return res.status(401).json({ error: "Credenciais inválidas" });
-            }
-            // Gerar access token (curta duração)
+            // 🔥 Gerar tokens após registro
             const accessToken = signAccessToken({
                 userId: user.id,
                 email: user.email,
                 nome: user.nome,
             });
 
-            // Gerar refresh token (longa duração)
             const refreshToken = signRefreshToken({
                 userId: user.id,
                 email: user.email,
                 nome: user.nome,
             });
-            // Armazenar refresh token no banco de dados
+
+            // Salvar refresh token no banco
             const expiresAt = new Date();
             expiresAt.setDate(expiresAt.getDate() + 7);
-            console.log(refreshToken)
+
             await prismaClient.token.create({
                 data: {
                     token: refreshToken,
@@ -82,21 +73,88 @@ class AuthController {
                     expiresAt,
                 },
             });
-            res.status(200).json({
+
+            return res.status(201).json({
+                message: "Usuário criado com sucesso",
+                user,
                 accessToken,
-                refreshToken,
-                user: {
-                    id: user.id,
-                    email: user.email,
-                    nome: user.nome,
-                },
+                refreshToken
             });
+
         } catch (error) {
-            console.error("Erro no login:", error);
-            res.status(500).json({ error: "Erro interno do servidor" });
+            console.error("Erro no registro:", error);
+            return res.status(500).json({ error: "Erro interno do servidor" });
         }
-        return res;
-    };
+    }
+
+
+    async login(req, res) {
+    try {
+        console.log("REQ BODY:", req.body);
+
+        // aceita "senha" do front e "password" se vier assim
+        const { email, senha, password } = req.body;
+        const pw = senha || password;
+
+        if (!email || !pw) {
+            return res.status(400).json({ error: "Email e senha são obrigatórios" });
+        }
+
+        const user = await prismaClient.usuario.findUnique({ where: { email } });
+
+        if (!user) {
+            return res.status(401).json({ error: "Credenciais inválidas" });
+        }
+
+        console.log("password recebido:", pw);
+        console.log("hash do banco:", user.password);
+
+        const passwordMatch = await bcrypt.compare(pw, user.password);
+
+        if (!passwordMatch) {
+            return res.status(401).json({ error: "Credenciais inválidas" });
+        }
+
+        const accessToken = signAccessToken({
+            userId: user.id,
+            email: user.email,
+            nome: user.nome,
+        });
+
+        const refreshToken = signRefreshToken({
+            userId: user.id,
+            email: user.email,
+            nome: user.nome,
+        });
+
+        const expiresAt = new Date();
+        expiresAt.setDate(expiresAt.getDate() + 7);
+
+        await prismaClient.token.create({
+            data: {
+                token: refreshToken,
+                type: "refresh",
+                usuarioId: user.id,
+                expiresAt,
+            },
+        });
+
+        return res.status(200).json({
+            accessToken,
+            refreshToken,
+            user: {
+                id: user.id,
+                email: user.email,
+                nome: user.nome,
+            },
+        });
+
+    } catch (error) {
+        console.error("Erro no login:", error);
+        return res.status(500).json({ error: "Erro interno do servidor" });
+    }
+}
+
 
     async refresh(
         req,

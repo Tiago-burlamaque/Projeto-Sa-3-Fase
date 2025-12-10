@@ -1,84 +1,99 @@
-import { useEffect, useState } from 'react'
-import { useAuth } from '../../Context/AuthContext'
-import axios from 'axios'
+import { useEffect, useState } from "react";
+import { useAuth } from "../../Context/AuthContext";
+import axios from "axios";
 
 function MeusDados() {
-  const { user } = useAuth()
-  const [meuUsuario, setMeuUsuario] = useState(null)
+  const { token } = useAuth();
+  const [usuario, setUsuario] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // React.StrictMode (development) mounts and unmounts components twice to help detect
-    // side effects — that can cause network requests to run twice in dev.
-    // We add an AbortController to cancel the request on unmount and to make the effect
-    // safer (idempotent) across mounts.
+    if (!token) return;
+
     const controller = new AbortController();
-    const fetchUsuario = async () => {
+
+    const carregarUsuario = async () => {
       try {
-        if (!user?.email) return; // wait for user to be available
-        const response = await axios.get("http://localhost:3001/usuarios", {
-          params: { email: user.email },
+        const { data } = await axios.get("http://localhost:3000/auth/me", {
+          headers: { Authorization: `Bearer ${token}` },
           signal: controller.signal,
         });
-        setMeuUsuario(response.data[0] || null);
+
+        setUsuario(data);
       } catch (err) {
-        // If the request was aborted, `err` will be an AbortError/CanceledError in modern fetch/axios
-        // We ignore the cancellation, log other errors
-        if (err.name === 'CanceledError' || err.message === 'canceled') return;
-        console.error("Erro ao buscar usuários:", err);
+        if (!axios.isCancel(err)) {
+          console.error("Erro ao buscar usuário:", err);
+        }
+      } finally {
+        setLoading(false);
       }
     };
-    fetchUsuario();
+
+    carregarUsuario();
     return () => controller.abort();
-  }, [user]);
+  }, [token]);
+
+  if (loading) {
+    return (
+      <section className="bg-white min-h-screen flex justify-center items-center">
+        <p className="text-blue-500 text-xl">Carregando seus dados...</p>
+      </section>
+    );
+  }
+
+  if (!usuario) {
+    return (
+      <section className="bg-white min-h-screen flex justify-center items-center">
+        <p className="text-red-500 text-xl">Não foi possível carregar seus dados.</p>
+      </section>
+    );
+  }
+
+  const endereco = usuario.endereco || {};
 
   return (
-    <section className='bg-white min-h-screen py-8 justify-center items-center  flex'>
-      <div className='md:max-w-4xl mx-auto p-4'>
-        <div className='bg-blue-500 rounded-xl p-6 flex flex-col'>
-          <div>
-            {meuUsuario ? (
-              <section key={meuUsuario.id} className='gap-4 flex flex-col'>
-                <nav className='bg-blue-400 shadow-md rounded-lg p-4 text-white text-center flex justify-center items-center text-2xl'>
-                  <h1>Seja bem vindo {meuUsuario.nome || "-"}</h1>
-                  {/* <p>Nome: {meuUsuario.nome || "-"}</p>
-              <p>Email: {meuUsuario.email}</p> */}
-                  {/* Avoid showing password in UI for security reasons */}
-                </nav>
+    <section className="bg-white min-h-screen py-8 flex justify-center items-center">
+      <div className="md:max-w-4xl mx-auto p-4">
+        <div className="bg-blue-500 rounded-xl p-6 flex flex-col gap-4">
 
-                <nav className='bg-blue-400 shadow-md rounded-lg p-4 text-white text-center flex justify-center items-center text-2xl'>
-                  <h1>Seus Dados</h1>
-                </nav>
+          {/* Boas-vindas */}
+          <nav className="bg-blue-400 rounded-lg p-4 text-white text-center text-2xl">
+            <h1>Seja bem-vindo, {usuario.nome}</h1>
+          </nav>
 
-                <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+          {/* Título */}
+          <nav className="bg-blue-400 rounded-lg p-4 text-white text-center text-2xl">
+            <h1>Seus Dados</h1>
+          </nav>
 
-                  <nav className='bg-blue-400 shadow-md rounded-lg p-4 text-white text-left flex flex-col gap-2'>
-                    <span className='w-full'>Nome: {meuUsuario.nome || '-'}</span>
-                    <span className='w-full'>E-mail: {meuUsuario.email}</span>
-                    <span className='w-full'>Data de Nascimento: {meuUsuario.data_nascimento}</span>
-                    {/* Avoid showing password in UI for security reasons */}
-                    <span className='w-full'>CPF: {meuUsuario.cpf}</span>
-                    <span className='w-full'>RG: {meuUsuario.rg}</span>
-                    <span className='w-full'>Telefone: {meuUsuario.telefone}</span>
-                  </nav>
-                  <nav className='bg-blue-400 shadow-md rounded-lg p-4 text-white text-left flex flex-col gap-2'>
-                    <span>CEP: {meuUsuario.endereco?.cep || '-'}</span>
-                    <span>Rua: {meuUsuario.endereco?.logradouro || '-'}</span>
-                    <span>Número: {meuUsuario.endereco?.numero || '-'}</span>
-                    <span>Bairro: {meuUsuario.endereco?.bairro || '-'}</span>
-                    <span>Cidade: {meuUsuario.endereco?.cidade || '-'}</span>
-                    <span>Estado: {meuUsuario.endereco?.estado || '-'}</span>
-                    <span>Complemento: {meuUsuario.endereco?.complemento || '-'}</span>
-                  </nav>
-                </div>
-              </section>
-            ) : (
-              <p>Carregando seus dados...</p>
-            )}
+          {/* Blocos de Dados */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            
+            {/* Dados Pessoais */}
+            <nav className="bg-blue-400 shadow-md rounded-lg p-4 text-white flex flex-col gap-2">
+              <span><strong>Nome:</strong> {usuario.nome}</span>
+              <span><strong>Email:</strong> {usuario.email}</span>
+              <span><strong>Data de Nascimento:</strong> {usuario.data_nascimento}</span>
+              <span><strong>CPF:</strong> {usuario.cpf}</span>
+              <span><strong>RG:</strong> {usuario.rg}</span>
+              <span><strong>Telefone:</strong> {usuario.telefone}</span>
+            </nav>
+
+            {/* Endereço */}
+            <nav className="bg-blue-400 shadow-md rounded-lg p-4 text-white flex flex-col gap-2">
+              <span><strong>CEP:</strong> {endereco.cep || "-"}</span>
+              <span><strong>Rua:</strong> {endereco.logradouro || "-"}</span>
+              <span><strong>Número:</strong> {endereco.numero || "-"}</span>
+              <span><strong>Bairro:</strong> {endereco.bairro || "-"}</span>
+              <span><strong>Cidade:</strong> {endereco.cidade || "-"}</span>
+              <span><strong>Estado:</strong> {endereco.estado || "-"}</span>
+              <span><strong>Complemento:</strong> {endereco.complemento || "-"}</span>
+            </nav>
           </div>
         </div>
       </div>
     </section>
-  )
+  );
 }
 
 export default MeusDados;

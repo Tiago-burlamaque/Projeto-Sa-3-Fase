@@ -1,27 +1,35 @@
-import express from "express"
-import cors from "cors"
-// import dotenv from 'dotenv';
+import express from "express";
+import cors from "cors";
 
-import  usuarioRouter  from "./routes/usuarios.js"
+import usuarioRouter from "./routes/usuarios.js";
 import movimentacaoRouter from "./routes/movimentacao.js";
 import inventarioRouter from "./routes/inventario.js";
+import authRouter from "./routes/authRoutes.js"; 
 import { auth } from "./middleware/auth.js";
-import authRouter from "./routes/authRoutes.js";
 
-// dotenv.config();
+export const app = express();
 
-export const app = express()
+app.use(cors());
+app.use(express.json());
 
-app.use(cors())
-app.use(express.json())
-
+// Rota de teste
 app.get("/ping", (req, res) => {
   res.send("pong");
 });
 
-app.use("/auth", authRouter)
-app.use(auth)
+/* 
+ * 🔓 ROTAS PÚBLICAS (sem auth)
+ * /register e /login JÁ estão definidas como públicas dentro do authRouter
+ * então aqui basta montar sem proteger
+*/
+app.use("/auth", authRouter);
+app.use("/mov",movimentacaoRouter);
+app.use("/inventario", inventarioRouter);
 
-app.use(usuarioRouter)
-app.use(movimentacaoRouter)
-app.use(inventarioRouter)
+/*
+ * 🔐 ROTAS PROTEGIDAS
+ * Tudo abaixo desse middleware exige token
+ */
+app.use(auth);
+
+app.use(usuarioRouter);

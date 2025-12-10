@@ -6,16 +6,18 @@ function Inventario() {
   const [inventario, setInventario] = useState([]);
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+
     axios
-      .get("http://localhost:3001/inventario")
+      .get("http://localhost:3000/inventario/itens")
       .then((res) => setInventario(res.data))
-      .catch((err) => console.error(err));
+      .catch((err) => console.error("Erro ao buscar itens:", err));
   }, []);
 
   return (
     <div className="p-4 space-y-4">
 
-      {/* ✅ MOBILE – CARDS */}
+      {/* MOBILE – Cards */}
       <div className="md:hidden space-y-4">
         {inventario.map((item) => (
           <div
@@ -47,7 +49,7 @@ function Inventario() {
         ))}
       </div>
 
-      {/* ✅ DESKTOP – TABELA */}
+      {/* DESKTOP – Tabela */}
       <div className="hidden md:block">
         <Table.Root>
           <Table.Header>

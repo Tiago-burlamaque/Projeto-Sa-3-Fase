@@ -99,8 +99,19 @@ const Cadastro = () => {
     setIsSaving(true);
 
     try {
-      await axios.post("http://localhost:3001/usuarios", {
-        ...formData,
+      // await axios.post("http://localhost:3001/usuarios", {
+      //   ...formData,
+      //   endereco: formData.address,
+      // });
+
+      await axios.post("http://localhost:3000/auth/register", {
+        nome: formData.nome,
+        email: formData.email,
+        password: formData.senha,   // <--- AQUI É O IMPORTANTE
+        data_nascimento: formData.data_nascimento,
+        cpf: formData.cpf,
+        rg: formData.rg,
+        telefone: formData.telefone,
         endereco: formData.address,
       });
 
